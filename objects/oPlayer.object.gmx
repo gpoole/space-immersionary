@@ -76,9 +76,10 @@ if(!Rotating &amp;&amp; instance_exists(oThrust)) {
         RotationFrom = image_angle
         RotationDuration = thrust.duration
         RotationStart = current_time
-        
-        RotationAmount = abs(image_angle - thrust.Rotation)
-        if(RotationAmount &gt; 180) {
+        RotationAmount = thrust.Rotation - image_angle
+        if(RotationAmount &lt; -180) {
+            RotationAmount += 360
+        } else if(RotationAmount &gt; 180) {
             RotationAmount -= 360
         }
     }
@@ -87,7 +88,13 @@ if(!Rotating &amp;&amp; instance_exists(oThrust)) {
 if(Rotating) {
     if((RotationStart + RotationDuration) &gt; current_time) {
         var rotation_t = (current_time - RotationStart) / RotationDuration;
-        image_angle = RotationFrom + (RotationAmount * rotation_t)
+        var rotation_step = 1 - power(1 - rotation_t, 3)
+        image_angle = RotationFrom + (RotationAmount * rotation_step)
+        if(image_angle &lt;= 0) { 
+            image_angle += 360
+        } else if(image_angle &gt;= 360) {
+            image_angle -= 360
+        }
     } else {
         Rotating = false;
     }
