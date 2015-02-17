@@ -76,12 +76,7 @@ if(!Rotating &amp;&amp; instance_exists(oThrust)) {
         RotationFrom = image_angle
         RotationDuration = thrust.duration
         RotationStart = current_time
-        RotationAmount = thrust.Rotation - image_angle
-        if(RotationAmount &lt; -180) {
-            RotationAmount += 360
-        } else if(RotationAmount &gt; 180) {
-            RotationAmount -= 360
-        }
+        RotationAmount = ((thrust.Rotation - image_angle + 180) % 360) - 180
     }
 }
 
