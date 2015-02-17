@@ -26,6 +26,7 @@
           <argument>
             <kind>1</kind>
             <string>MaxThrust = 350
+Rotating = false
 
 //Draw Circle
 
@@ -64,29 +65,33 @@ if y &lt;= 0 {
     y = room_height
 }
 
-//Facing
-image_angle = point_direction(x,y,mouse_x,mouse_y)
-
-
-
 if keyboard_check(ord('S')) {
     speed = 0.9*speed
 }
 
-//Deceleration
-/*Deceleration  = 0.2
-    
-    if speed &gt; Deceleration {
-    
-        speed = speed - 1/room_speed
-    }   else {
-        speed = 0
-}*/
+if(!Rotating &amp;&amp; instance_exists(oThrust)) {
+    var thrust = instance_find(oThrust, 0);
+    if(thrust.running &amp;&amp; abs(image_angle - thrust.Rotation) &gt; 0) {
+        Rotating = true
+        RotationFrom = image_angle
+        RotationDuration = thrust.duration
+        RotationStart = current_time
+        
+        RotationAmount = abs(image_angle - thrust.Rotation)
+        if(RotationAmount &gt; 180) {
+            RotationAmount -= 360
+        }
+    }
+}
 
-//motion_add(360 - image_angle, 0.75*speed)
-
-//Engine
-
+if(Rotating) {
+    if((RotationStart + RotationDuration) &gt; current_time) {
+        var rotation_t = (current_time - RotationStart) / RotationDuration;
+        image_angle = RotationFrom + (RotationAmount * rotation_t)
+    } else {
+        Rotating = false;
+    }
+}
 </string>
           </argument>
         </arguments>
@@ -111,11 +116,9 @@ if keyboard_check(ord('S')) {
             <kind>1</kind>
             <string>var thrust_force = distance_to_point(mouse_x, mouse_y)
 
-
-
 if thrust_force &gt; 0 {
     var thrust = instance_create(x, y, oThrust);
-    thrust.Rotation = image_angle
+    thrust.Rotation = point_direction(x,y,mouse_x,mouse_y)
     thrust.Thrust = min(thrust_force, MaxThrust)/ 200
 }
 
@@ -180,28 +183,6 @@ draw_circle(x,y,900,c_lime)
           <argument>
             <kind>0</kind>
             <string>0</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="9" enumb="32">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string></string>
           </argument>
         </arguments>
       </action>

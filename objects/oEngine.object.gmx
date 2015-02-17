@@ -25,7 +25,19 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string></string>
+            <string>if(instance_exists(oThrust)) {
+    var thrust = instance_find(oThrust, 0)
+    var player = instance_find(oPlayer, 0)
+    if(thrust.running) {
+        image_alpha = thrust.thrust_magnitude
+        image_angle = player.image_angle
+        x = player.x
+        y = player.y
+    }
+} else {
+    image_alpha = 0
+}
+</string>
           </argument>
         </arguments>
       </action>

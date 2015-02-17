@@ -57,17 +57,10 @@ init_time = 0
         init_time = current_time
     }
     var player = instance_find(oPlayer, 0)
-    var t = (current_time - init_time) / duration
-    var thrust_magnitude = (-1 * power(t, 2)) + 1
+    step = (current_time - init_time) / duration
+    thrust_magnitude = (-1 * power(step, 2)) + 1
     with(player)
-        motion_add(other.Rotation, thrust_magnitude * other.Thrust * 0.30)
-         
-            /*instance_create(x,y,oEngine)
-            Engine = instance_find(oEngine,0)
-            Engine.x = player.x
-            Engine.y = player.y
-            Engine.image_angle = Rotation
-            Engine.depth = 30*/
+        motion_add(other.Rotation, other.thrust_magnitude * other.Thrust * 0.30)
     
     if (current_time - init_time) &gt; duration
         instance_destroy()
@@ -99,13 +92,10 @@ init_time = 0
             <string> var player = instance_find(oPlayer, 0)
  
 if(running) {
-    var t = (current_time - init_time) / duration
-    var thrust_magnitude = (-1 * power(t, 2)) + 1
-        if thrust_magnitude &gt; 0 {
-            instance_create(oPlayer.x,oPlayer.y,oSmoke)
-                 
-        }
-
+    var thrust_magnitude = (-1 * power(step, 2)) + 1
+    if thrust_magnitude &gt; 0 {
+        instance_create(oPlayer.x,oPlayer.y,oSmoke)
+    }
 } else {
     var thrust_magnitude = 1
         
