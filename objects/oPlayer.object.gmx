@@ -72,21 +72,6 @@ if keyboard_check(ord('S')) {
 }
 
 //ROTATING
-if(instance_exists(oThrust)) {
-    var thrust = instance_find(oThrust, 0);
-    if(abs(image_angle - thrust.Rotation) &gt; 0) {
-        Rotating = true
-        RotationFrom = image_angle
-        RotationDuration = thrust.duration
-        RotationStart = current_time
-        
-        RotationAmount = abs(image_angle - thrust.Rotation)
-        if(RotationAmount &gt; 180) {
-            RotationAmount -= 360
-        }
-    }
-}
-
 if(Rotating) {
     if((RotationStart + RotationDuration) &gt; current_time) {
         var rotation_t = (current_time - RotationStart) / RotationDuration;
@@ -103,19 +88,10 @@ if Firing = false {
 
 if instance_exists(oThrust) {
     var thrust = instance_find(oThrust, 0)
-    if (thrust.running) {
-        Firing = true
-        
+    if (thrust.firing &amp;&amp; sprite_index != sPlayerBurn) {
+        sprite_index = sPlayerBurn
     } 
 }
-if (Firing) {
-    sprite_index = sPlayerBurn
-    var thrust = instance_find (oThrust, 0)
-    if !(thrust.running) {
-        Firing = false
-    }
-}
-
 
 </string>
           </argument>

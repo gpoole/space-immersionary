@@ -30,6 +30,9 @@ Rotation = 0
 duration = 750
 running = false
 init_time = 0
+start_delay = 750
+thrust_magnitude = 1
+firing = false
 </string>
           </argument>
         </arguments>
@@ -55,16 +58,20 @@ init_time = 0
             <string>if(running) {
     if(init_time == 0) {
         init_time = current_time
+        start_time = init_time + start_delay
+        end_time = start_time + duration
     }
-    var player = instance_find(oPlayer, 0)
-    step = (current_time - init_time) / duration
-    thrust_magnitude = (-1 * power(step, 2)) + 1
-    with(player)
-        motion_add(other.Rotation, other.thrust_magnitude * other.Thrust * 0.30)
-    
-    if (current_time - init_time) &gt; duration
-        instance_destroy()
-    
+    if(current_time &gt; start_time) {
+        firing = true
+        var player = instance_find(oPlayer, 0)
+        step = (current_time - start_time) / duration
+        thrust_magnitude = (-1 * power(step, 2)) + 1
+        with(player)
+            motion_add(other.Rotation, other.thrust_magnitude * other.Thrust * 0.30)
+        
+        if(current_time &gt; end_time)
+            instance_destroy()
+    }
 }
 
 </string>
@@ -89,20 +96,14 @@ init_time = 0
         <arguments>
           <argument>
             <kind>1</kind>
-            <string> var player = instance_find(oPlayer, 0)
+            <string>var player = instance_find(oPlayer, 0)
  
-if(running) {
-    var thrust_magnitude = (-1 * power(step, 2)) + 1
-    if thrust_magnitude &gt; 0 {
-        instance_create(oPlayer.x,oPlayer.y,oSmoke)
-    }
-} else {
-    var thrust_magnitude = 1
-        
+if firing {
+    instance_create(oPlayer.x,oPlayer.y,oSmoke)
 }
 
-tx = thrust_magnitude * Thrust * 350 * cos(degtorad(180 - Rotation))
-ty = thrust_magnitude * Thrust * 350 * sin(degtorad(180 - Rotation))
+tx = Thrust * 200 * cos(degtorad(180 - Rotation))
+ty = Thrust * 200 * sin(degtorad(180 - Rotation))
 
 
 draw_set_colour(c_red)
