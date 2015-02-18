@@ -66,8 +66,12 @@ firing = false
         var player = instance_find(oPlayer, 0)
         step = (current_time - start_time) / duration
         thrust_magnitude = (-1 * power(step, 2)) + 1
-        with(player)
-            motion_add(other.Rotation, other.thrust_magnitude * other.Thrust * 0.30)
+        with(player) {
+            var magnitude = other.thrust_magnitude * other.Thrust * 300;
+            var tx = magnitude * cos(degtorad(-other.Rotation));
+            var ty = magnitude * sin(degtorad(-other.Rotation));
+            physics_apply_force(x, y, tx, ty);
+        }
         
         if(current_time &gt; end_time)
             instance_destroy()

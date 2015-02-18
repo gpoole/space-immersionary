@@ -28,6 +28,7 @@
             <string>MaxThrust = 300
 Rotating = false
 Firing = false
+phy_fixed_rotation = true
 
 //Draw Circle
 
@@ -86,7 +87,7 @@ if(instance_exists(oThrust)) {
 if(Rotating) {
     if((RotationStart + RotationDuration) &gt; current_time) {
         var rotation_t = (current_time - RotationStart) / RotationDuration;
-        image_angle = (RotationFrom + (RotationAmount * rotation_t)) % 360
+        phy_rotation = -((RotationFrom + (RotationAmount * rotation_t)) % 360)
     } else {
         Rotating = false
     }
@@ -195,9 +196,9 @@ draw_circle(x,y,575,c_lime)
       </action>
     </event>
   </events>
-  <PhysicsObject>0</PhysicsObject>
+  <PhysicsObject>-1</PhysicsObject>
   <PhysicsObjectSensor>0</PhysicsObjectSensor>
-  <PhysicsObjectShape>2</PhysicsObjectShape>
+  <PhysicsObjectShape>0</PhysicsObjectShape>
   <PhysicsObjectDensity>0.5</PhysicsObjectDensity>
   <PhysicsObjectRestitution>0.100000001490116</PhysicsObjectRestitution>
   <PhysicsObjectGroup>0</PhysicsObjectGroup>
@@ -206,5 +207,8 @@ draw_circle(x,y,575,c_lime)
   <PhysicsObjectFriction>0.200000002980232</PhysicsObjectFriction>
   <PhysicsObjectAwake>-1</PhysicsObjectAwake>
   <PhysicsObjectKinematic>0</PhysicsObjectKinematic>
-  <PhysicsShapePoints/>
+  <PhysicsShapePoints>
+    <point>48,32</point>
+    <point>16,48</point>
+  </PhysicsShapePoints>
 </object>

@@ -12,6 +12,7 @@
     <sprite>sprites\sSmoke</sprite>
     <sprite>sprites\sPlayerBurn</sprite>
     <sprite>sprites\assteroid</sprite>
+    <sprite>sprites\pickup</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\background0</background>
@@ -32,6 +33,7 @@
     <object>objects\oObstacle</object>
     <object>objects\oAsteroid</object>
     <object>objects\oEntity</object>
+    <object>objects\oBonus</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\room0</room>

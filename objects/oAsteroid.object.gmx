@@ -10,8 +10,8 @@
   <events/>
   <PhysicsObject>-1</PhysicsObject>
   <PhysicsObjectSensor>0</PhysicsObjectSensor>
-  <PhysicsObjectShape>0</PhysicsObjectShape>
-  <PhysicsObjectDensity>0.5</PhysicsObjectDensity>
+  <PhysicsObjectShape>2</PhysicsObjectShape>
+  <PhysicsObjectDensity>2</PhysicsObjectDensity>
   <PhysicsObjectRestitution>0.100000001490116</PhysicsObjectRestitution>
   <PhysicsObjectGroup>0</PhysicsObjectGroup>
   <PhysicsObjectLinearDamping>0.100000001490116</PhysicsObjectLinearDamping>
@@ -20,7 +20,13 @@
   <PhysicsObjectAwake>-1</PhysicsObjectAwake>
   <PhysicsObjectKinematic>0</PhysicsObjectKinematic>
   <PhysicsShapePoints>
-    <point>178,145</point>
-    <point>178,178</point>
+    <point>348,108</point>
+    <point>336,228</point>
+    <point>216,276</point>
+    <point>72,264</point>
+    <point>0,168</point>
+    <point>48,48</point>
+    <point>120,12</point>
+    <point>276,24</point>
   </PhysicsShapePoints>
 </object>
