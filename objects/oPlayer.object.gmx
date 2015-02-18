@@ -71,13 +71,24 @@ if keyboard_check(ord('S')) {
     speed = 0.99*speed
 }
 
+if(instance_exists(oThrust)) {
+    var next_thrust = instance_find(oThrust, 0);
+    if(!Rotating &amp;&amp; abs(image_angle - next_thrust.Rotation) &gt; 0) {
+        Rotating = true
+        RotationFrom = image_angle
+        RotationDuration = next_thrust.duration
+        RotationStart = current_time
+        RotationAmount = ((next_thrust.Rotation - image_angle + 180) % 360) - 180
+    }
+}
+
 //ROTATING
 if(Rotating) {
     if((RotationStart + RotationDuration) &gt; current_time) {
         var rotation_t = (current_time - RotationStart) / RotationDuration;
-        image_angle = RotationFrom + (RotationAmount * rotation_t)
+        image_angle = (RotationFrom + (RotationAmount * rotation_t)) % 360
     } else {
-        Rotating = false;
+        Rotating = false
     }
 }
 
@@ -122,10 +133,6 @@ if thrust_force &gt; 0 {
     thrust.Rotation = point_direction(x,y,mouse_x,mouse_y)
     thrust.Thrust = min(thrust_force, MaxThrust)/ 200
 }
-
-
-
-
 </string>
           </argument>
         </arguments>

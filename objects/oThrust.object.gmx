@@ -30,7 +30,7 @@ Rotation = 0
 duration = 750
 running = false
 init_time = 0
-start_delay = 750
+start_delay = 0
 thrust_magnitude = 1
 firing = false
 </string>
@@ -102,8 +102,8 @@ if firing {
     instance_create(oPlayer.x,oPlayer.y,oSmoke)
 }
 
-tx = Thrust * 200 * cos(degtorad(180 - Rotation))
-ty = Thrust * 200 * sin(degtorad(180 - Rotation))
+tx = Thrust * player.MaxThrust * cos(degtorad(180 - Rotation))
+ty = Thrust * player.MaxThrust * sin(degtorad(180 - Rotation))
 
 
 draw_set_colour(c_red)
