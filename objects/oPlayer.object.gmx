@@ -25,8 +25,9 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>MaxThrust = 350
+            <string>MaxThrust = 300
 Rotating = false
+Firing = false
 
 //Draw Circle
 
@@ -65,35 +66,57 @@ if y &lt;= 0 {
     y = room_height
 }
 
+//BRAKE
 if keyboard_check(ord('S')) {
-    speed = 0.9*speed
+    speed = 0.99*speed
 }
 
-if(!Rotating &amp;&amp; instance_exists(oThrust)) {
+//ROTATING
+if(instance_exists(oThrust)) {
     var thrust = instance_find(oThrust, 0);
-    if(thrust.running &amp;&amp; abs(image_angle - thrust.Rotation) &gt; 0) {
+    if(abs(image_angle - thrust.Rotation) &gt; 0) {
         Rotating = true
         RotationFrom = image_angle
         RotationDuration = thrust.duration
         RotationStart = current_time
-        RotationAmount = ((thrust.Rotation - image_angle + 180) % 360) - 180
+        
+        RotationAmount = abs(image_angle - thrust.Rotation)
+        if(RotationAmount &gt; 180) {
+            RotationAmount -= 360
+        }
     }
 }
 
 if(Rotating) {
     if((RotationStart + RotationDuration) &gt; current_time) {
         var rotation_t = (current_time - RotationStart) / RotationDuration;
-        var rotation_step = 1 - power(1 - rotation_t, 3)
-        image_angle = RotationFrom + (RotationAmount * rotation_step)
-        if(image_angle &lt;= 0) { 
-            image_angle += 360
-        } else if(image_angle &gt;= 360) {
-            image_angle -= 360
-        }
+        image_angle = RotationFrom + (RotationAmount * rotation_t)
     } else {
         Rotating = false;
     }
 }
+
+//engine
+if Firing = false {
+    sprite_index = sPlayer
+}
+
+if instance_exists(oThrust) {
+    var thrust = instance_find(oThrust, 0)
+    if (thrust.running) {
+        Firing = true
+        
+    } 
+}
+if (Firing) {
+    sprite_index = sPlayerBurn
+    var thrust = instance_find (oThrust, 0)
+    if !(thrust.running) {
+        Firing = false
+    }
+}
+
+
 </string>
           </argument>
         </arguments>
@@ -149,13 +172,12 @@ if thrust_force &gt; 0 {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>
-
+            <string>        
 //drawing a line
 draw_set_colour(c_lime);
 draw_line(x,y,mouse_x,mouse_y)
 
-draw_circle(x,y,900,c_lime)
+draw_circle(x,y,575,c_lime)
 </string>
           </argument>
         </arguments>

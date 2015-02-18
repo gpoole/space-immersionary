@@ -16,6 +16,9 @@
     <background>background\background0</background>
   </backgrounds>
   <paths name="paths"/>
+  <scripts name="scripts">
+    <script>scripts\zoom_step.gml</script>
+  </scripts>
   <fonts name="fonts">
     <font>fonts\font0</font>
   </fonts>
