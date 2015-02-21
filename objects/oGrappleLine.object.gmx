@@ -28,6 +28,7 @@
             <string>Strength = 100
 Duration = 1
 MaxDistance = 900
+Initialised = false
 Connected = true
 alarm[0] = room_speed * Duration
 </string>

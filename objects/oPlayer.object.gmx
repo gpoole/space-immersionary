@@ -25,7 +25,7 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>MaxThrust = 200
+            <string>MaxThrust = 500
 Rotating = false
 phy_fixed_rotation = true
 
@@ -93,10 +93,8 @@ if(!Player_IsDead()) {
                     RotationAmount = ((next_thrust.Rotation - image_angle + 180) % 360) - 180
                 }
                 // We've set up our rotation and we know what delay we want so start firing
-                if(Fuel &gt; 0) {
-                    next_thrust.start_delay = RotationDuration
-                    next_thrust.running = true
-                }
+                next_thrust.start_delay = RotationDuration
+                next_thrust.running = true
             } else {
                 // We are in the middle of a thrust, so decrease our fuel a bit
                 // Thrust is a value between one and zero so "maximum thrust" is 1
@@ -219,14 +217,8 @@ if(!Player_IsDead()) {
     if Player_InState("boost") {   
         var thrust_force = min(distance_to_point(mouse_x, mouse_y), MaxThrust)
         
-        // Player's out of fuel, so only let them set one vector
-        if(instance_exists(oThrust) &amp;&amp; Fuel &lt;= 0) {
-            with(oThrust) {
-                instance_destroy();
-            }
-        }
-        
-        if thrust_force &gt; 0 {
+        // Let the player set a vector if there isn't one already and they have enough fuel
+        if !instance_exists(oThrust) &amp;&amp; thrust_force &gt; 0 {
             var thrust = instance_create(x, y, oThrust);
             thrust.Rotation = point_direction(x,y,mouse_x,mouse_y)
             thrust.Thrust = (thrust_force)/ MaxThrust

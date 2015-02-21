@@ -16,6 +16,7 @@
     <sprite>sprites\pickup</sprite>
     <sprite>sprites\sRailBullet</sprite>
     <sprite>sprites\dead</sprite>
+    <sprite>sprites\fuel</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\background0</background>
@@ -47,6 +48,7 @@
     <object>objects\oBonus</object>
     <object>objects\oRailBullet</object>
     <object>objects\oGrappleLine</object>
+    <object>objects\oFuel</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\room0_new</room>

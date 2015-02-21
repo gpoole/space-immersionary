@@ -66,17 +66,23 @@ if(running) {
     }
     if(current_time &gt; start_time) {
         var player = instance_find(oPlayer, 0)
+
         if(Player_IsDead() || player.Fuel &lt;= 0) {
+            // Puff of smoke
+            instance_create(player.x, player.y, oSmoke)
             instance_destroy()
         } else {
             firing = true
             step = (current_time - start_time) / duration
             thrust_magnitude = (-1 * power(step, 2)) + 1
             with(player) {
-                var magnitude = other.thrust_magnitude * other.Thrust * 300;
+                var magnitude = other.thrust_magnitude * other.Thrust * 500;
                 var tx = magnitude * cos(degtorad(-other.Rotation));
                 var ty = magnitude * sin(degtorad(-other.Rotation));
                 physics_apply_force(x, y, tx, ty);
+                
+                // Smoke trails
+                instance_create(x, y, oSmoke)
             }
             
             if(current_time &gt; end_time)
@@ -108,10 +114,6 @@ if(running) {
           <argument>
             <kind>1</kind>
             <string>var player = instance_find(oPlayer, 0)
-
-if firing {
-    instance_create(oPlayer.x,oPlayer.y,oSmoke)
-}
 
 tx = Thrust * player.MaxThrust * cos(degtorad(180 - Rotation))
 ty = Thrust * player.MaxThrust * sin(degtorad(180 - Rotation))
