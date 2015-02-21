@@ -74,14 +74,18 @@ alarm[0] = room_speed * Duration
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>// Negated because the physics engine in this game is FUCKING IN REVERSE FOR NO GOOD REASON
-var dir = -point_direction(Origin.x, Origin.y, Target.x, Target.y);
-var distance = point_distance(Origin.x, Origin.y, Target.x, Target.y);
-
-with(Origin) {
-    // var force = vector_components(dir, (1 - (exp(log10(2) * (distance / other.MaxDistance)) - 1)) * 2000);
-    var force = vector_components(dir, distance);
-    physics_apply_force(x, y, force[0], force[1]);
+            <string>if(!Player_IsDead()) {
+    // Negated because the physics engine in this game is FUCKING IN REVERSE FOR NO GOOD REASON
+    var dir = -point_direction(Origin.x, Origin.y, Target.x, Target.y);
+    var distance = point_distance(Origin.x, Origin.y, Target.x, Target.y);
+    
+    with(Origin) {
+        var force = vector_components(dir, (1 - (exp(log10(2) * (distance / other.MaxDistance)) - 1)) * 500);
+        //var force = vector_components(dir, distance);
+        physics_apply_force(x, y, force[0], force[1]);
+    }
+} else {
+    instance_destroy()
 }
 </string>
           </argument>

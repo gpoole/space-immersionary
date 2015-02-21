@@ -25,10 +25,12 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>var player = instance_find(oPlayer, 0);
-if(collision_circle(x, y, 20, player, false, true)) {
-    instance_destroy();
-    score += 100;
+            <string>if(!Player_IsDead()) {
+    var player = instance_find(oPlayer, 0);
+    if(collision_circle(x, y, 20, player, false, true)) {
+        instance_destroy();
+        score += 100;
+    }
 }
 </string>
           </argument>

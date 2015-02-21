@@ -27,8 +27,12 @@
             <kind>1</kind>
             <string>MaxThrust = 200
 Rotating = false
-Firing = false
 phy_fixed_rotation = true
+
+Damage = 0
+MaxDamage = 100
+Fuel = 100
+MaxFuel = 1000
 
 States[0] = "boost"
 States[1] = "shoot"
@@ -72,62 +76,96 @@ if y &lt;= 0 {
 if keyboard_check(ord('S')) {
     speed = 0.99*speed
 }
-   
-// Pull thrusts off the queue and fire them 
-if(instance_exists(oThrust)) {
-    var next_thrust = instance_find(oThrust, 0);
-    if(!Rotating) {
-        if(!next_thrust.running) {
-            // Not rotating yet and not facing the right way, so rotate to
-            // face where we want to go
-            if(round(abs(image_angle - next_thrust.Rotation)) &gt; 0) {
-                Rotating = true
-                RotationFrom = image_angle
-                RotationDuration = 250
-                RotationStart = current_time
-                RotationAmount = ((next_thrust.Rotation - image_angle + 180) % 360) - 180
+
+if(!Player_IsDead()) {
+    // Pull thrusts off the queue and fire them 
+    if(instance_exists(oThrust)) {
+        var next_thrust = instance_find(oThrust, 0);
+        if(!Rotating) {
+            if(!next_thrust.running) {
+                // Not rotating yet and not facing the right way, so rotate to
+                // face where we want to go
+                if(round(abs(image_angle - next_thrust.Rotation)) &gt; 0) {
+                    Rotating = true
+                    RotationFrom = image_angle
+                    RotationDuration = 250
+                    RotationStart = current_time
+                    RotationAmount = ((next_thrust.Rotation - image_angle + 180) % 360) - 180
+                }
+                // We've set up our rotation and we know what delay we want so start firing
+                if(Fuel &gt; 0) {
+                    next_thrust.start_delay = RotationDuration
+                    next_thrust.running = true
+                }
+            } else {
+                // We are in the middle of a thrust, so decrease our fuel a bit
+                // Thrust is a value between one and zero so "maximum thrust" is 1
+                var thrust = next_thrust.Thrust;
+                Fuel -= .5 * thrust;
             }
-            // We've set up our rotation and we know what delay we want so start firing
-            next_thrust.start_delay = RotationDuration
-            next_thrust.running = true
-        }
-    } else {
-        // We're rowating arownd and arownd
-        if((RotationStart + RotationDuration) &gt; current_time) {
-            var rotation_t = (current_time - RotationStart) / RotationDuration;
-            phy_rotation = -((RotationFrom + (RotationAmount * rotation_t)) % 360)
         } else {
-            // We're done rotating
-            Rotating = false
+            // We're rowating arownd and arownd
+            if((RotationStart + RotationDuration) &gt; current_time) {
+                var rotation_t = (current_time - RotationStart) / RotationDuration;
+                phy_rotation = -((RotationFrom + (RotationAmount * rotation_t)) % 360)
+            } else {
+                // We're done rotating
+                Rotating = false
+            }
         }
     }
-}
-
-// Show the firing animation
-if instance_exists(oThrust) {
-    var thrust = instance_find(oThrust, 0)
-    if (thrust.firing) {
-        if(sprite_index != sPlayerBurn) {
-            sprite_index = sPlayerBurn
+    
+    // Show the firing animation
+    if instance_exists(oThrust) {
+        var thrust = instance_find(oThrust, 0)
+        if (thrust.firing) {
+            if(sprite_index != sPlayerBurn) {
+                sprite_index = sPlayerBurn
+            }
+        } else {
+            sprite_index = sPlayer
         }
     } else {
         sprite_index = sPlayer
     }
-} else {
-    sprite_index = sPlayer
-}
-
-
-//ShootState
-if Player_InState("shoot") {
-    // BoostState = false
-    sprite_index = sPlayerGun
     
-    // TODO: Add rotation function to allow rotation to be set from multiple places
-    // phy_rotation = -1*point_direction(x, y, mouse_x, mouse_y)
+    
+    //ShootState
+    if Player_InState("shoot") {
+        // BoostState = false
+        sprite_index = sPlayerGun
+        
+        // TODO: Add rotation function to allow rotation to be set from multiple places
+        // phy_rotation = -1*point_direction(x, y, mouse_x, mouse_y)
+    }
+} else {
+    // Oh no we're dead!
+    sprite_index = dead
 }
 
-
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="oObstacle">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>Damage += 2
 </string>
           </argument>
         </arguments>
@@ -177,31 +215,40 @@ if Player_InState("shoot") {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if Player_InState("boost") {   
-    var thrust_force = distance_to_point(mouse_x, mouse_y)
+            <string>if(!Player_IsDead()) {
+    if Player_InState("boost") {   
+        var thrust_force = min(distance_to_point(mouse_x, mouse_y), MaxThrust)
+        
+        // Player's out of fuel, so only let them set one vector
+        if(instance_exists(oThrust) &amp;&amp; Fuel &lt;= 0) {
+            with(oThrust) {
+                instance_destroy();
+            }
+        }
+        
+        if thrust_force &gt; 0 {
+            var thrust = instance_create(x, y, oThrust);
+            thrust.Rotation = point_direction(x,y,mouse_x,mouse_y)
+            thrust.Thrust = (thrust_force)/ MaxThrust
+        }
+    } else if Player_InState("shoot") {
+        Bullet = instance_create(x,y,oRailBullet)
+        with (Bullet) {
+            RailGunForce = 1000
+            BulletDirection = -1*point_direction(self.x, self.y, mouse_x, mouse_y)
+            phy_rotation = BulletDirection
+            var tx = 10*(RailGunForce * cos(degtorad(BulletDirection)));
+            var ty = 10*(RailGunForce * sin(degtorad(BulletDirection)));
+            physics_apply_force(self.x,self.y,tx,ty)
+        }
     
-    if thrust_force &gt; 0 {
-        var thrust = instance_create(x, y, oThrust);
-        thrust.Rotation = point_direction(x,y,mouse_x,mouse_y)
-        thrust.Thrust = (thrust_force)/ 200
+        KickBack = -500
+        BulletKickDirection = 1*point_direction(oPlayer.x, oPlayer.y, mouse_x, mouse_y)
+        phy_rotation = BulletKickDirection
+        var txkick = KickBack * cos(degtorad(BulletKickDirection));
+        var tykick = KickBack * sin(degtorad(BulletKickDirection));
+        physics_apply_force(x,y,txkick,-1*tykick)
     }
-} else if Player_InState("shoot") {
-    Bullet = instance_create(x,y,oRailBullet)
-    with (Bullet) {
-        RailGunForce = 1000
-        BulletDirection = -1*point_direction(self.x, self.y, mouse_x, mouse_y)
-        phy_rotation = BulletDirection
-        var tx = 10*(RailGunForce * cos(degtorad(BulletDirection)));
-        var ty = 10*(RailGunForce * sin(degtorad(BulletDirection)));
-        physics_apply_force(self.x,self.y,tx,ty)
-    }
-
-    KickBack = -500
-    BulletKickDirection = 1*point_direction(oPlayer.x, oPlayer.y, mouse_x, mouse_y)
-    phy_rotation = BulletKickDirection
-    var txkick = KickBack * cos(degtorad(BulletKickDirection));
-    var tykick = KickBack * sin(degtorad(BulletKickDirection));
-    physics_apply_force(x,y,txkick,-1*tykick)
 }
 </string>
           </argument>

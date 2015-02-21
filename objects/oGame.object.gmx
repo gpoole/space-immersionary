@@ -27,7 +27,6 @@
             <kind>1</kind>
             <string>//window
 //window_set_fullscreen(true)
-draw_set_font(font0)
 
 </string>
           </argument>
@@ -69,29 +68,33 @@ if keyboard_check_pressed(ord('R')) {
     <event eventtype="8" enumb="74">
       <action>
         <libid>1</libid>
-        <id>703</id>
-        <kind>0</kind>
-        <userelative>-1</userelative>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
         <isquestion>0</isquestion>
-        <useapplyto>0</useapplyto>
-        <exetype>1</exetype>
-        <functionname>action_draw_score</functionname>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
         <codestring></codestring>
         <whoName>self</whoName>
         <relative>0</relative>
         <isnot>0</isnot>
         <arguments>
           <argument>
-            <kind>0</kind>
-            <string>0</string>
-          </argument>
-          <argument>
-            <kind>0</kind>
-            <string>0</string>
-          </argument>
-          <argument>
             <kind>1</kind>
-            <string>Score: </string>
+            <string>// GUI
+draw_set_font(font0)
+draw_set_colour(c_lime);
+with(Player_GetCurrent()) {
+    draw_text(0, 0, "Fuel: " + string(round(Fuel/MaxFuel*100)) + "%");
+    draw_text(0, 20, "Health: " + string(100 - round(Damage/MaxDamage*100)) + "%");
+}
+
+if(Player_IsDead()) {
+    draw_set_colour(c_red);
+    draw_text((window_get_width() / 2) - 150, (window_get_height() / 2) - 15, "Shit mate your dead");
+}
+</string>
           </argument>
         </arguments>
       </action>
