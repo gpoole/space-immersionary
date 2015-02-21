@@ -30,7 +30,7 @@ Duration = 1
 MaxDistance = 900
 Initialised = false
 Connected = true
-alarm[0] = room_speed * Duration
+// alarm[0] = room_speed * Duration
 </string>
           </argument>
         </arguments>

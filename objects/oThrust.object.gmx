@@ -73,10 +73,11 @@ if(running) {
             instance_destroy()
         } else {
             firing = true
-            step = (current_time - start_time) / duration
-            thrust_magnitude = (-1 * power(step, 2)) + 1
+            // step = (current_time - start_time) / duration
+            // thrust_magnitude = (-1 * power(step, 2)) + 1
+            thrust_magnitude = 1
             with(player) {
-                var magnitude = other.thrust_magnitude * other.Thrust * 500;
+                var magnitude = other.Thrust * 500;
                 var tx = magnitude * cos(degtorad(-other.Rotation));
                 var ty = magnitude * sin(degtorad(-other.Rotation));
                 physics_apply_force(x, y, tx, ty);
@@ -85,8 +86,8 @@ if(running) {
                 instance_create(x, y, oSmoke)
             }
             
-            if(current_time &gt; end_time)
-                instance_destroy()
+            //if(current_time &gt; end_time)
+            //    instance_destroy()
         }
     }
 }
