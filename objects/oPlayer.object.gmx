@@ -287,6 +287,42 @@ Player_ChangeState(-1);
         </arguments>
       </action>
     </event>
+    <event eventtype="10" enumb="71">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if(!instance_exists(oGrappleLine)) {
+    var target = instance_nearest(x, y, oObstacle);
+    //var direction = point_direction(x, y, target.x, target.y);
+    var distance = point_distance(x, y, target.x, target.y);
+    
+    // TODO: replace with global
+    if(distance &lt; 900) {
+        var grapple = instance_create(0, 0, oGrappleLine);
+        grapple.Target = target;
+        grapple.Origin = instance_find(oPlayer, 0);
+    }
+} else {
+    // Destroy the current grapple line?
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="10" enumb="69">
       <action>
         <libid>1</libid>

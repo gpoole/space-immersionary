@@ -41,6 +41,7 @@
     <object>objects\oEntity</object>
     <object>objects\oBonus</object>
     <object>objects\oRailBullet</object>
+    <object>objects\oGrappleLine</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\room0_new</room>
