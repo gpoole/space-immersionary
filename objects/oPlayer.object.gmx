@@ -316,7 +316,9 @@ Player_ChangeState(-1);
         grapple.Origin = instance_find(oPlayer, 0);
     }
 } else {
-    // Destroy the current grapple line?
+    with(oGrappleLine) {
+        instance_destroy();
+    }
 }
 </string>
           </argument>

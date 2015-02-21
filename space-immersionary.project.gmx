@@ -26,6 +26,8 @@
     <script>scripts\Player_GetState.gml</script>
     <script>scripts\Player_ChangeState.gml</script>
     <script>scripts\Player_InState.gml</script>
+    <script>scripts\vector_components.gml</script>
+    <script>scripts\angle_add.gml</script>
   </scripts>
   <fonts name="fonts">
     <font>fonts\font0</font>
