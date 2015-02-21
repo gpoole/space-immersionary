@@ -7,12 +7,14 @@
   <sounds name="sound"/>
   <sprites name="sprites">
     <sprite>sprites\sPlayer</sprite>
+    <sprite>sprites\sPlayerGun</sprite>
     <sprite>sprites\sprite1</sprite>
     <sprite>sprites\sBullet2</sprite>
     <sprite>sprites\sSmoke</sprite>
     <sprite>sprites\sPlayerBurn</sprite>
     <sprite>sprites\assteroid</sprite>
     <sprite>sprites\pickup</sprite>
+    <sprite>sprites\sRailBullet</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\background0</background>
@@ -20,6 +22,7 @@
   <paths name="paths"/>
   <scripts name="scripts">
     <script>scripts\zoom_step.gml</script>
+    <script>scripts\ShootBullet.gml</script>
   </scripts>
   <fonts name="fonts">
     <font>fonts\font0</font>
@@ -34,9 +37,10 @@
     <object>objects\oAsteroid</object>
     <object>objects\oEntity</object>
     <object>objects\oBonus</object>
+    <object>objects\oRailBullet</object>
   </objects>
   <rooms name="rooms">
-    <room>rooms\room0</room>
+    <room>rooms\room0_new</room>
   </rooms>
   <help>
     <rtf>help.rtf</rtf>
