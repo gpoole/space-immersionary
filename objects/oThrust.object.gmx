@@ -69,7 +69,7 @@ if(running) {
 
         if(Player_IsDead() || player.Fuel &lt;= 0) {
             // Puff of smoke
-            instance_create(player.x, player.y, oSmoke)
+            effect_create_below(ef_smoke, player.x, player.y, choose(0, 1, 2), c_gray);
             instance_destroy()
         } else {
             firing = true
@@ -83,7 +83,8 @@ if(running) {
                 physics_apply_force(x, y, tx, ty);
                 
                 // Smoke trails
-                instance_create(x, y, oSmoke)
+                //var smoke_coords = vector_to_point(image_angle, -150, player.x, player.y);
+                effect_create_below(ef_smoke, player.x, player.y, choose(0, 1, 2), c_gray);
             }
             
             //if(current_time &gt; end_time)

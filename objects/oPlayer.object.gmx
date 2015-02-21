@@ -164,6 +164,7 @@ if(!Player_IsDead()) {
           <argument>
             <kind>1</kind>
             <string>Damage += 2
+effect_create_above(ef_spark, x, y, choose(0, 1, 2), c_orange)
 </string>
           </argument>
         </arguments>

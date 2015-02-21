@@ -33,6 +33,7 @@
     <script>scripts\Player_GetCurrent.gml</script>
     <script>scripts\Player_IsDead.gml</script>
     <script>scripts\closest_point.gml</script>
+    <script>scripts\vector_to_point.gml</script>
   </scripts>
   <fonts name="fonts">
     <font>fonts\font0</font>
