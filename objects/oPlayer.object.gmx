@@ -30,11 +30,9 @@ Rotating = false
 Firing = false
 phy_fixed_rotation = true
 
-//States
-BoostState = true
-ShootState = false
-SensorState = false
-
+States[0] = "boost"
+States[1] = "shoot"
+State = 0
 </string>
           </argument>
         </arguments>
@@ -73,39 +71,26 @@ if y &lt;= 0 {
 //BRAKE
 if keyboard_check(ord('S')) {
     speed = 0.99*speed
-    }
-    
-  
-//Change State 
-
-if keyboard_check_pressed(ord('Q')) and !ShootState {
-    BoostState = false
-    ShootState = true
-    } 
-
-if keyboard_check_pressed(ord('E')) and ShootState = true {
-    Shootstate = false
-    BoostState = true
-    }
+}
    
-     
-   
-// Handle rotating into position before firing thrusts
+// Pull thrusts off the queue and fire them 
 if(instance_exists(oThrust)) {
     var next_thrust = instance_find(oThrust, 0);
     if(!Rotating) {
-        // Not rotating yet and not facing the right way, so rotate to
-        // face where we want to go
-        if(round(abs(image_angle - next_thrust.Rotation)) &gt; 0) {
-            Rotating = true
-            RotationFrom = image_angle
-            RotationDuration = 50
-            RotationStart = current_time
-            RotationAmount = ((next_thrust.Rotation - image_angle + 180) % 360) - 180
+        if(!next_thrust.running) {
+            // Not rotating yet and not facing the right way, so rotate to
+            // face where we want to go
+            if(round(abs(image_angle - next_thrust.Rotation)) &gt; 0) {
+                Rotating = true
+                RotationFrom = image_angle
+                RotationDuration = 250
+                RotationStart = current_time
+                RotationAmount = ((next_thrust.Rotation - image_angle + 180) % 360) - 180
+            }
+            // We've set up our rotation and we know what delay we want so start firing
+            next_thrust.start_delay = RotationDuration
+            next_thrust.running = true
         }
-        // We've set up our rotation and we know what delay we want so start firing
-        next_thrust.start_delay = RotationDuration
-        next_thrust.running = true
     } else {
         // We're rowating arownd and arownd
         if((RotationStart + RotationDuration) &gt; current_time) {
@@ -128,43 +113,18 @@ if instance_exists(oThrust) {
     } else {
         sprite_index = sPlayer
     }
+} else {
+    sprite_index = sPlayer
 }
 
 
-
 //ShootState
-
-
-if ShootState = true {
-    BoostState = false
+if Player_InState("shoot") {
+    // BoostState = false
     sprite_index = sPlayerGun
-    phy_rotation = -1*point_direction(x, y, mouse_x, mouse_y)
     
-    if mouse_check_button_pressed(mb_left) {
-    
-        Bullet = instance_create(x,y,oRailBullet)
-        with (Bullet) {
-            RailGunForce = 1000
-            BulletDirection = -1*point_direction(self.x, self.y, mouse_x, mouse_y)
-            phy_rotation = BulletDirection
-            var tx = 10*(RailGunForce * cos(degtorad(BulletDirection)));
-            var ty = 10*(RailGunForce * sin(degtorad(BulletDirection)));
-            physics_apply_force(self.x,self.y,tx,ty)
-            }
-        with (oPlayer){
-            KickBack = -500
-            BulletKickDirection = 1*point_direction(oPlayer.x, oPlayer.y, mouse_x, mouse_y)
-            phy_rotation = BulletKickDirection
-            var txkick = KickBack * cos(degtorad(BulletKickDirection));
-            var tykick = KickBack * sin(degtorad(BulletKickDirection));
-            physics_apply_force(x,y,txkick,-1*tykick)
-            }
-        }
-         
-    if keyboard_check_pressed(ord('E'))and ShootState = true{
-        ShootState = false
-        BoostState = true
-    }
+    // TODO: Add rotation function to allow rotation to be set from multiple places
+    // phy_rotation = -1*point_direction(x, y, mouse_x, mouse_y)
 }
 
 
@@ -190,8 +150,10 @@ if ShootState = true {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>with(oThrust){
-    instance_destroy()
+            <string>if(Player_InState("boost")) {
+    with(oThrust){
+        instance_destroy()
+    }
 }
 </string>
           </argument>
@@ -215,7 +177,7 @@ if ShootState = true {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if BoostState = true {   
+            <string>if Player_InState("boost") {   
     var thrust_force = distance_to_point(mouse_x, mouse_y)
     
     if thrust_force &gt; 0 {
@@ -223,9 +185,24 @@ if ShootState = true {
         thrust.Rotation = point_direction(x,y,mouse_x,mouse_y)
         thrust.Thrust = (thrust_force)/ 200
     }
-}
-    
+} else if Player_InState("shoot") {
+    Bullet = instance_create(x,y,oRailBullet)
+    with (Bullet) {
+        RailGunForce = 1000
+        BulletDirection = -1*point_direction(self.x, self.y, mouse_x, mouse_y)
+        phy_rotation = BulletDirection
+        var tx = 10*(RailGunForce * cos(degtorad(BulletDirection)));
+        var ty = 10*(RailGunForce * sin(degtorad(BulletDirection)));
+        physics_apply_force(self.x,self.y,tx,ty)
+    }
 
+    KickBack = -500
+    BulletKickDirection = 1*point_direction(oPlayer.x, oPlayer.y, mouse_x, mouse_y)
+    phy_rotation = BulletKickDirection
+    var txkick = KickBack * cos(degtorad(BulletKickDirection));
+    var tykick = KickBack * sin(degtorad(BulletKickDirection));
+    physics_apply_force(x,y,txkick,-1*tykick)
+}
 </string>
           </argument>
         </arguments>
@@ -282,6 +259,54 @@ draw_circle(mouse_x,mouse_y, 25, c_aqua)
           <argument>
             <kind>0</kind>
             <string>0</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="10" enumb="81">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>// Roll down through available states
+Player_ChangeState(-1);
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="10" enumb="69">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>// Roll up through available states
+Player_ChangeState(1);
+</string>
           </argument>
         </arguments>
       </action>

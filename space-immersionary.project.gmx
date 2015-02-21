@@ -23,6 +23,9 @@
   <scripts name="scripts">
     <script>scripts\zoom_step.gml</script>
     <script>scripts\ShootBullet.gml</script>
+    <script>scripts\Player_GetState.gml</script>
+    <script>scripts\Player_ChangeState.gml</script>
+    <script>scripts\Player_InState.gml</script>
   </scripts>
   <fonts name="fonts">
     <font>fonts\font0</font>
