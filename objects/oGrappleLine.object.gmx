@@ -28,6 +28,7 @@
             <string>Strength = 100
 Duration = 1
 MaxDistance = 900
+Connected = true
 alarm[0] = room_speed * Duration
 </string>
           </argument>
@@ -79,10 +80,12 @@ alarm[0] = room_speed * Duration
     var dir = -point_direction(Origin.x, Origin.y, Target.x, Target.y);
     var distance = point_distance(Origin.x, Origin.y, Target.x, Target.y);
     
-    with(Origin) {
-        var force = vector_components(dir, (1 - (exp(log10(2) * (distance / other.MaxDistance)) - 1)) * 500);
-        //var force = vector_components(dir, distance);
-        physics_apply_force(x, y, force[0], force[1]);
+    if(Connected) {
+        with(Origin) {
+            var force = vector_components(dir, (1 - (exp(log10(2) * (distance / other.MaxDistance)) - 1)) * 500);
+            //var force = vector_components(dir, distance);
+            physics_apply_force(x, y, force[0], force[1]);
+        }
     }
 } else {
     instance_destroy()

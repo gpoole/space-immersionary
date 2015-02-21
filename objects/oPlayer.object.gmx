@@ -353,10 +353,8 @@ Player_ChangeState(-1);
             <kind>1</kind>
             <string>if(!instance_exists(oGrappleLine)) {
     var target = instance_nearest(x, y, oObstacle);
-    //var direction = point_direction(x, y, target.x, target.y);
     var distance = point_distance(x, y, target.x, target.y);
-    
-    // TODO: replace with global
+    // TODO: Make this a global
     if(distance &lt; 900) {
         var grapple = instance_create(0, 0, oGrappleLine);
         grapple.Target = target;

@@ -84,15 +84,34 @@ if keyboard_check_pressed(ord('R')) {
             <kind>1</kind>
             <string>// GUI
 draw_set_font(font0)
-draw_set_colour(c_lime);
+
 with(Player_GetCurrent()) {
-    draw_text(0, 0, "Fuel: " + string(round(Fuel/MaxFuel*100)) + "%");
-    draw_text(0, 20, "Health: " + string(100 - round(Damage/MaxDamage*100)) + "%");
+    var fuel = round(Fuel / MaxFuel * 100);
+    var damage = round(Damage / MaxDamage * 100);
+    
+    if(fuel &gt; 50) {
+        draw_set_colour(c_lime);
+    } else if(fuel &gt; 15) {
+        draw_set_colour(c_orange);
+    } else {
+        draw_set_colour(c_red);
+    }
+    
+    draw_text(0, 0, "Fuel: " + string(fuel) + "%");
+    
+    if(damage &lt; 50) {
+        draw_set_colour(c_lime);
+    } else if(damage &lt; 85) {
+        draw_set_colour(c_orange);
+    } else {
+        draw_set_colour(c_red);
+    }
+    draw_text(0, 20, "Health: " + string(100 - damage) + "%");
 }
 
 if(Player_IsDead()) {
     draw_set_colour(c_red);
-    draw_text((window_get_width() / 2) - 150, (window_get_height() / 2) - 15, "Shit mate your dead");
+    draw_text((window_get_width() / 2) - 150, (window_get_height() / 2) - 15, "Shit mate your fuckt");
 }
 </string>
           </argument>
