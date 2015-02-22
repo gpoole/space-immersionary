@@ -31,7 +31,7 @@ phy_fixed_rotation = true
 
 Damage = 0
 MaxDamage = 100
-Fuel = 100
+Fuel = 1000
 MaxFuel = 1000
 
 States[0] = "boost"
@@ -88,7 +88,7 @@ if(!Player_IsDead()) {
                 if(round(abs(image_angle - next_thrust.Rotation)) &gt; 0) {
                     Rotating = true
                     RotationFrom = image_angle
-                    RotationDuration = 250
+                    RotationDuration = 50
                     RotationStart = current_time
                     RotationAmount = ((next_thrust.Rotation - image_angle + 180) % 360) - 180
                 }
@@ -163,7 +163,7 @@ if(!Player_IsDead()) {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>Damage += 2
+            <string>Damage += 100 * (min(sqrt(power(phy_speed_x, 2) * power(phy_speed_y, 2)), 50) / 50)
 effect_create_above(ef_spark, x, y, choose(0, 1, 2), c_orange)
 </string>
           </argument>
@@ -272,6 +272,30 @@ effect_create_above(ef_spark, x, y, choose(0, 1, 2), c_orange)
     }
 }
 </string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>211</id>
+        <kind>0</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>0</useapplyto>
+        <exetype>1</exetype>
+        <functionname>action_sound</functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>6</kind>
+            <sound>sound1</sound>
+          </argument>
+          <argument>
+            <kind>3</kind>
+            <string>0</string>
           </argument>
         </arguments>
       </action>
